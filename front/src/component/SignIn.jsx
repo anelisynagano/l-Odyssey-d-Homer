@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { TextField, Button, Snackbar } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+
 
 class SignUp extends Component {
   constructor(props){
@@ -8,11 +9,6 @@ class SignUp extends Component {
     this.state = {
       email: 'example@example.com',
       password: 'mypassword',
-      verificationPassword: 'mypassword',
-      name: 'jon',
-      lastname: 'doe',
-      flash: '',
-      open: false  
     }
   }
 
@@ -22,7 +18,7 @@ class SignUp extends Component {
 
 
   handleSubmit = (e) => {
-    fetch("/auth/signup",
+    fetch("/auth/signin",
     {
           method:  'POST',
           headers:  new Headers({
@@ -34,53 +30,35 @@ class SignUp extends Component {
     .then(
           res  =>  this.setState({
             flash:  res.flash,
-            open: true
           }),
           err  =>  this.setState({
             flash:  err.flash,
-            open: true
           })
     )
     console.log(`information submitted: ${JSON.stringify(this.state)}`);
     e.preventDefault();
   }
 
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.setState({
-      open: false
-    });
-  }
-
   render() {
     return(
       <div>
-        <Snackbar
+        {/* <Snackbar
           open={this.state.open}
           autoHideDuration={5000}
           onClose={this.handleClose}
           message={<p>{this.state.flash}</p>}
-        />
-        <h1>Sign Up</h1>
+        /> */}
+        <h1>Sign In</h1>
         <form action="POST" onSubmit={this.handleSubmit}>
           <TextField type="email" label="Email" name="email" onChange={this.updateField} placeholder='example@example.com'/>
           <br/>
           <TextField type="password" label="Password" name="password" onChange={this.updateField} placeholder='Password'/>
           <br/>
-          <TextField type="password" label="Password Copy" name="verificationPassword" onChange={this.updateField} placeholder='Password Copy'/>
-          <br/>
-          <TextField type="name" name="name" label="Name" onChange={this.updateField} placeholder='Name'/>
-          <br/>
-          <TextField type="lastname" label="Last Name" name="lastname" onChange={this.updateField} placeholder='Last Name'/>
-          <br/>
-          <Link to="/signin">
-            <Button type="submit" value="submit" >Submit</Button>
+          <Link to="/profile">
+            <Button type="submit" value="submit">Submit</Button>
           </Link>
-
         </form>
-        <Link to="/signin">Sign In</Link>
+        <Link to="/signup">Sign Up</Link>
       </div>
     );
   }
