@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { TextField, Button, Snackbar } from '@material-ui/core';
+
 
 class SignUp extends Component {
   constructor(props){
@@ -9,7 +11,8 @@ class SignUp extends Component {
       verificationPassword: 'mypassword',
       name: 'jon',
       lastname: 'doe',
-      flash: ''
+      flash: '',
+      open: false  
     }
   }
 
@@ -29,32 +32,50 @@ class SignUp extends Component {
     })
     .then(res  =>  res.json())
     .then(
-          res  =>  this.setState({flash:  res.flash}),
-          err  =>  this.setState({flash:  err.flash})
+          res  =>  this.setState({
+            flash:  res.flash,
+            open: true
+          }),
+          err  =>  this.setState({
+            flash:  err.flash,
+            open: true
+          })
     )
     console.log(`information submitted: ${JSON.stringify(this.state)}`);
     e.preventDefault();
   }
 
-  render(){
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      open: false
+    });
+  }
+
+  render() {
     return(
       <div>
-        <div className={this.state.flash === "User has been signed up!" ? 'green': 'red'}>
-        <p>{this.state.flash}</p>
-        </div>
+        <Snackbar
+          open={this.state.open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          message={<p>{this.state.flash}</p>}
+        />
         <h1>Sign Up</h1>
         <form action="POST" onSubmit={this.handleSubmit}>
-          <input type="email" name="email" onChange={this.updateField} placeholder='example@example.com'/>
+          <TextField type="email" label="Email" name="email" onChange={this.updateField} placeholder='example@example.com'/>
           <br/>
-          <input type="password" name="password" onChange={this.updateField} placeholder='password'/>
+          <TextField type="password" label="Password" name="password" onChange={this.updateField} placeholder='Password'/>
           <br/>
-          <input type="password" name="verificationPassword" onChange={this.updateField} placeholder='password'/>
+          <TextField type="password" label="Password Copy" name="verificationPassword" onChange={this.updateField} placeholder='Password Copy'/>
           <br/>
-          <input type="name" name="name" onChange={this.updateField} placeholder='John'/>
+          <TextField type="name" name="name" label="Name" onChange={this.updateField} placeholder='Name'/>
           <br/>
-          <input type="lastname" name="lastname" onChange={this.updateField} placeholder='Doe'/>
+          <TextField type="lastname" label="Last Name" name="lastname" onChange={this.updateField} placeholder='Last Name'/>
           <br/>
-          <input type="submit" value='Submit'/>
+          <Button type="submit" value="submit" >Submit</Button>
 
         </form>
       </div>
